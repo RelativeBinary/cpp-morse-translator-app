@@ -52,5 +52,18 @@ bool checkArguments(std::string From, std::string To, std::string inTxtFile, std
             return false;
         }
     }
+
+    std::string inType = inTxtFile.substr(inTxtFile.size() - 4, 4);
+    std::cout << "InType: " << inType << '\n';
+
+    std::string outType = outTxtFile.substr(outTxtFile.size() - 4, 4);
+    std::cout << "outType: " << outType << '\n';
+
+    if (inType != ".txt" || outType != ".txt"){
+        std::cerr << "ERROR: incorrect input/output file type specified. Expected .txt\n";
+        return false;
+    }
+
+
     return true;
 }
