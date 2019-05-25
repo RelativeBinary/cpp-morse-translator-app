@@ -1,13 +1,13 @@
-#include <iostream>
-#include <string>
+#include "template.h"
 
 bool checkArguments(std::string, std::string, std::string, std::string);
 
 int main(int argc, char* argv[]){
-//take cli args
-
+//take check args
 bool validArgs = checkArguments(argv[1], argv[2], argv[3], argv[4]);
-
+char From, To; 
+std::string inFile, outFile;
+//assign args
 if (validArgs){
     std::cout << "Valid Arguments were passed\n";
     char From = argv[1][0];
@@ -17,9 +17,26 @@ if (validArgs){
 } else {
     std::cerr << "ERROR: Invalid arguments passed ending program.\n";
 }
-    //checks from In and Out Txt files
 
-    return true;
+//TEMPORARY
+std::vector<int> morseAlpha; 
+std::vector<int> brailleAlpha;
+//sperates the intxt file into characters for the intxt vector to hold each character for later translation
+std::vector<int> intxt;
+//in outtxt the intxt character will be sent to a translate() which will match it with one of the Alphas based on 'FROM then determine its 'TO' converstion if 'TO' is to non-latin type then something will need to be done to convert the FROM type to latin then take the TO type and translate the latin to the TO type
+std::vector<int> outtxt;
+
+
+int i = 0;
+while (validArgs && i < 1){
+
+}
+
+
+
+
+
+    return 0;
 }
 
 bool checkArguments(std::string From, std::string To, std::string inTxtFile, std::string outTxtFile)
