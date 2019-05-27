@@ -1,8 +1,11 @@
+#include "template.h"
 #include <iostream>
 #include <string>
-#include "template.h"
+#include <vector>
+#include <fstream>
 
-template <typename T>
-morseChar<T>::morseChar(T customChar, char latinConversion)
-{
-}
+/*morseChar::morseChar(char charType, std::string newChar, char latin){
+    type = charType;
+    newChar = custChar;
+    lChar = latin;
+}*/

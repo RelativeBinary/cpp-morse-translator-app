@@ -3,44 +3,32 @@
 bool checkArguments(std::string, std::string, std::string, std::string);
 
 int main(int argc, char* argv[]){
-//take check args
-bool validArgs = checkArguments(argv[1], argv[2], argv[3], argv[4]);
-char From, To; 
-std::string inFile, outFile;
-//assign args
-if (validArgs){
-    std::cout << "Valid Arguments were passed\n";
-    char From = argv[1][0];
-    char To = argv[2][0];
-    std::string inFile = argv[3];
-    std::string outFile = argv[4];
-} else {
-    std::cerr << "ERROR: Invalid arguments passed ending program.\n";
-}
+    //take check args
+    bool validArgs = checkArguments(argv[1], argv[2], argv[3], argv[4]);
+    char From, To; 
+    std::string inFile, outFile;
+    //assign args
+    if (validArgs){
+        std::cout << "Valid Arguments were passed\n";
+        char From = argv[1][0];
+        char To = argv[2][0];
+        std::string inFile = argv[3];
+        std::string outFile = argv[4];
 
-//TEMPORARY
-std::vector<int> morseAlpha; 
-std::vector<int> brailleAlpha;
-//sperates the intxt file into characters for the intxt vector to hold each character for later translation
-std::vector<int> intxt;
-//in outtxt the intxt character will be sent to a translate() which will match it with one of the Alphas based on 'FROM then determine its 'TO' converstion if 'TO' is to non-latin type then something will need to be done to convert the FROM type to latin then take the TO type and translate the latin to the TO type
-std::vector<int> outtxt;
+        //load alphabet
+        Alphabet<morseChar> mDict;
+        mDict.loadAlphabet('M');
+        Alphabet<morseChar> bDict;
+        bDict.loadAlphabet('B');
 
-
-int i = 0;
-while (validArgs && i < 1){
+    } else {
+        std::cerr << "ERROR: Invalid arguments passed ending program.\n";
+    }
 
 }
 
 
-
-
-
-    return 0;
-}
-
-bool checkArguments(std::string From, std::string To, std::string inTxtFile, std::string outTxtFile)
-{
+bool checkArguments(std::string From, std::string To, std::string inTxtFile, std::string outTxtFile){
     if (!(From.size() == 1)){
         std::cerr << "ERROR: Invalid From input size: " << From.size() << '\n';
         return false;
@@ -79,7 +67,7 @@ bool checkArguments(std::string From, std::string To, std::string inTxtFile, std
     if (inType != ".txt" || outType != ".txt"){
         std::cerr << "ERROR: incorrect input/output file type specified. Expected .txt\n";
         return false;
-    }
+    }//needs further checking
 
 
     return true;
