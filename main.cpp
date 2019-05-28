@@ -15,19 +15,38 @@ int main(int argc, char* argv[]){
         std::string inFile = argv[3];
         std::string outFile = argv[4];
 
-        //load alphabet
+        //load alphabets
         Alphabet<morseChar> mDict;
-        mDict.loadAlphabet('M');
-        Alphabet<morseChar> bDict;
-        bDict.loadAlphabet('B');
+        loadAlphabet(mDict);
+        Alphabet<brailleChar> bDict;
+        loadAlphabet(bDict);
+        //report the results of loading the alphabets
 
+        //using FROM send inMsgFileDie to alphabet of FROM type using std::vector xDict.READFILE(inMsgFileDir); returning the translated result to a vector in main.
+            //if its latin then just split the string into a char vector
+
+        //then a report method will be used to report the stats on the translated vector
+
+        //READING FILE COMPLETE
+
+        //TRANSLATE FILE
+        //using TO send the resulting charvector to the appropriate alphabet and execute the translation command using if(TO == 'L') then outChars = xDict.ToLatin(inMsg)
+        //if translating from 'M' to 'B' then have an intermediary step where a temp vector of latin translation is made using if(TO != 'L') then latinChars = xDictoLatin(inMsg) then  is dont again using TO's type by, if(TO == 'X') then latinChars = xDict.translateToTOType(tempLatin)
     } else {
         std::cerr << "ERROR: Invalid arguments passed ending program.\n";
     }
 
 }
 
+/*
 
+
+                                     ____________
+                                    //FUNCTIONS//|
+                                    |```````````|/
+
+
+*/
 bool checkArguments(std::string From, std::string To, std::string inTxtFile, std::string outTxtFile){
     if (!(From.size() == 1)){
         std::cerr << "ERROR: Invalid From input size: " << From.size() << '\n';

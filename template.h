@@ -7,61 +7,58 @@
 class morseChar {
     private:
         std::string type;
-        std::string custChar;
-        char lChar;                             //latin character
-        bool validateChracter(std::string newChar);                //uses the customeChar type and checks if the string passed to the constructor is made up of the correct symbols
+        std::string mChar;
+        char lChar;                                                 //latin character
     public:
         morseChar(char charType, std::string newChar, char latin);
-        std::string getCustChar();
+        std::string getMorChar();
+        char getLatChar();
+};
+
+class brailleChar {
+    private: 
+        std::string type;
+        std::string bChar; 
+        char lChar;
+    public: 
+        brailleChar(char charType, std::string newChar, char latin);
+        std::string getBraChar();
         char getLatChar();
 };
 
 template <class T>
 class Alphabet {
     private:
-        bool noErrors = true;
-        std::vector<T> fromAlphabet;
-        std::vector<T> toAlphabet;
+        std::vector<T> characters;
     public:
-        bool loadAlphabet(char type){
-            
-        }
         Alphabet(){
-            /*
-            //load fromAlphabet
-            if (fromType == 'M'|| fromType == 'B'){
-                loadAlphabet(fromType, fromAlphabet);
-            } else if (fromType == 'L'){
-                //link to toAlphabet
-                fromAlphabet = &toAlphabet;
-            } else {
-                std::cerr << "ERROR: the language type was not found. fromAlphabet failed to construct.\n";
+        }
+        bool isEmpty() {
+            return characters.empty();
+        }
+        bool doesExist(morseChar& newChar){
+            if (isEmpty()){
+                return false;                                           //newChar doesnt exist as the characters vector is empty
             }
+            for (int i = 0; i < characters.size(); i++){
+                if (newChar.getLatChar == characters[i].getLatChar ||)
+            }
+        }
+        bool addNewChar(T& newChar){
+            characters.push_back(newChar);
+        }
 
-            //load toAlphabet
-            if(toType == 'M'|| toType == 'B'){
-                loadAlphabet(toType, toAlphabet);
-            } else if (toType == 'L'){
-                //link to fromAlphabet
-                toAlphabet = &fromAlphabet;
-            } else {
-                std::cerr << "ERROR: the language type was not found. toAlphabet failed to construct.\n";
-            }*/
-        }
-        bool isFromEmpty() {
-            return fromAlphabet.empty();
-        }
-        bool isToEmpty(){
-            return toDictionary.empty();
-        }
-        bool successfulLoad(){
-            return noErrors;
-        }
 };
 
+//check as much intermediate data before even making the char objs
+bool checkMorse(std::string newChar);                                   //uses the morseChar type and checks if the string passed is made up of the correct symbols
+bool checkBraille(std::string newChar);                                 //uses the brailleChar type and checks if the string passed is made up of the correct symbols
+bool loadAlphabet(Alphabet<morseChar> &);                               //opens file for morse, loads/checks new morse chars into the alphabet's character vector given
+bool loadAlphabet(Alphabet<brailleChar> &);                             //opens file for braille, loads/checks new braille chars into alphabet's character vector given
 
 #endif
 //NOTES: overloading will be for types of customChar and normal char
 //morse characters are sperated by spaces, but the whitespace character is represented by an underscore
 //in morse space is not underscore anymore but just the whitespace character
-//newlines and eof will be tricky to implement
+//newlines and eof 
+//newlines: when reading a file ur generally using a getline while loop, so at the end of the while loop you can add a newline character IF were not at last line of the file
