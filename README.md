@@ -20,13 +20,13 @@ On execution the command is:
 ### M = Mores. 
  - Morse uses sequences of dots (.) and dashes (-) to represent letters and numbers. Although this program is limited to just using letters, and a symbol for space. 
  - The translation rule for Latin to Morse is given in the file `Morse.txt`.
- -  the underscore `_` will represent a space in Latin and `----` dashes to represent a space in Morse. *this is not part of standard morse code*
+ - `----` dashes to represent a whitespace in Morse. *this is not part of standard morse code*
 
 ### B = Braille.
 - Braille uses a 2 by 3 grid of flat or raised positions. Which are represented in a binary string i.e. `000000` = all flat positions
 - Since we are only limited to letters and space 6 bits is enough
 - The translation rule for Latin to Braille is given in the file `Braille.txt`
-- the `_` will also be representing the space in Latin text and `000000` in braille.
+- `000000` in braille to represent whitespace
 
 ### L = Latin.
 - The allowed symbols are the standard lower case letters used in English and a space ' '.
