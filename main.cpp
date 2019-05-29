@@ -9,21 +9,19 @@ int main(int argc, char* argv[]){
     std::string inFile, outFile;
     //assign args
     if (validArgs){
-        std::cout << "Valid Arguments were passed\n";
+        std::cout << "Input arguments VALID.\n";
         char From = argv[1][0];
         char To = argv[2][0];
         std::string inFile = argv[3];
         std::string outFile = argv[4];
 
-        //load alphabets
+        //load alphabets and report the results of loading the alphabets
         Alphabet<morseChar> mDict;
         loadAlphabet(mDict);
         Alphabet<brailleChar> bDict;
         loadAlphabet(bDict);
-        //report the results of loading the alphabets
-
         //using FROM send inMsgFileDie to alphabet of FROM type using std::vector xDict.READFILE(inMsgFileDir); returning the translated result to a vector in main.
-            //if its latin then just split the string into a char vector
+        //if its latin then just split the string into a char vector
 
         //then a report method will be used to report the stats on the translated vector
 
@@ -38,15 +36,7 @@ int main(int argc, char* argv[]){
 
 }
 
-/*
-
-
-                                     ____________
-                                    //FUNCTIONS//|
-                                    |```````````|/
-
-
-*/
+//USED TO CHECK INPUT
 bool checkArguments(std::string From, std::string To, std::string inTxtFile, std::string outTxtFile){
     if (!(From.size() == 1)){
         std::cerr << "ERROR: Invalid From input size: " << From.size() << '\n';
@@ -78,10 +68,7 @@ bool checkArguments(std::string From, std::string To, std::string inTxtFile, std
     }
 
     std::string inType = inTxtFile.substr(inTxtFile.size() - 4, 4);
-    std::cout << "InType: " << inType << '\n';
-
     std::string outType = outTxtFile.substr(outTxtFile.size() - 4, 4);
-    std::cout << "outType: " << outType << '\n';
 
     if (inType != ".txt" || outType != ".txt"){
         std::cerr << "ERROR: incorrect input/output file type specified. Expected .txt\n";

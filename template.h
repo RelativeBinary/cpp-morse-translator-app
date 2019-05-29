@@ -6,24 +6,30 @@
 
 class morseChar {
     private:
-        std::string type;
         std::string mChar;
         char lChar;                                                 //latin character
     public:
-        morseChar(char charType, std::string newChar, char latin);
-        std::string getMorChar();
-        char getLatChar();
+        morseChar(std::string newChar, char latin);
+        std::string getMorChar() {
+            return mChar;
+        }
+        char getLatChar() {
+            return lChar;
+        }
 };
 
 class brailleChar {
     private: 
-        std::string type;
         std::string bChar; 
         char lChar;
     public: 
-        brailleChar(char charType, std::string newChar, char latin);
-        std::string getBraChar();
-        char getLatChar();
+        brailleChar(std::string newChar, char latin);
+        std::string getBraChar(){
+            return bChar;
+        }
+        char getLatChar(){
+            return lChar;
+        }
 };
 
 template <class T>
@@ -33,6 +39,7 @@ class Alphabet {
     public:
         Alphabet(){
         }
+        void displayAlphabet();
         bool isEmpty() {
             return characters.empty();
         }
@@ -41,8 +48,28 @@ class Alphabet {
                 return false;                                           //newChar doesnt exist as the characters vector is empty
             }
             for (int i = 0; i < characters.size(); i++){
-                if (newChar.getLatChar == characters[i].getLatChar ||)
+                if (newChar.getLatChar() == characters[i].getLatChar() && newChar.getMorChar() == characters[i].getMorChar() ){
+                    std::cout << "MorseChar: '" << newChar.getMorChar() << "' already exists.\n";
+                    return true;
+                }
             }
+            return false;
+        }
+        bool doesExist(brailleChar &newChar)
+        {
+            if (isEmpty())
+            {
+                return false; //newChar doesnt exist as the characters vector is empty
+            }
+            for (int i = 0; i < characters.size(); i++)
+            {
+                if (newChar.getLatChar() == characters[i].getLatChar() && newChar.getBraChar() == characters[i].getBraChar())
+                {
+                    std::cout << "MorseChar: '" << newChar.getBraChar() << "' already exists.\n";
+                    return true;
+                }
+            }
+            return false;
         }
         bool addNewChar(T& newChar){
             characters.push_back(newChar);
