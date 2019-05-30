@@ -17,7 +17,7 @@ On execution the command is:
  
 `[To]` - Indicates the target alphabet. | M, B or L |
 
-### M = Mores. 
+### M = Morse.
  - Morse uses sequences of dots (.) and dashes (-) to represent letters and numbers. Although this program is limited to just using letters, and a symbol for space. 
  - The translation rule for Latin to Morse is given in the file `Morse.txt`.
  - `----` dashes to represent a whitespace in Morse. *this is not part of standard morse code*
