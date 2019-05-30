@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <map>
 
 bool checkLatin(char &newChar);
 bool readLatFile(std::vector<char> &latinMsg, std::string &inFile);
@@ -23,14 +24,13 @@ class Alphabet {
         bool isEmpty() {
             return characters.empty();
         }
-        bool doesExist(T &newChar){
+        bool doesExist(T &target){
             if (isEmpty()){
-                std::cerr << "ERROR: attempting to use an empty alphabet.\n";
                 return false;                                           //newChar doesnt exist as the characters vector is empty
             }
             for (int i = 0; i < characters.size(); i++){
-                if (newChar.getLatChar() == characters[i].getLatChar() && newChar.getChar() == characters[i].getChar() ){
-                    std::cout << "Char: '" << newChar.getChar() << "' already exists.\n";
+                if (target.getLatChar() == characters[i].getLatChar() && target.getChar() == characters[i].getChar() ){
+                    std::cout << "Char: '" << target.getChar() << "' already exists.\n";
                     return true;
                 }
             }
@@ -38,7 +38,6 @@ class Alphabet {
         }
         bool doesStrExist(std::string &target){
             if(isEmpty()){
-                std::cerr << "ERROR: attempting to use an empty alphabet.\n";
                 return false;
             }
             for (int i = 0; i < characters.size(); i++){
@@ -46,7 +45,7 @@ class Alphabet {
                     return true;
                 }
             }
-            std::cerr << "ERROR: was not able to locate '" << target << "' in alphabet.\n";
+            return false;
         }
         bool doesLatExist(char &target){
 
@@ -249,6 +248,33 @@ bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {
         return false;
     }
     //the whole input file has been broken down into single characters which have been checked for validity and then added to the typeMsgVector
+    return true;
+}
+
+template <class T> 
+bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
+    //report on length of message.
+    std::cout << "\t\t:REPORT:\n\n";
+    std::cout << "Message Size:\t" << typeMsg.size() << '\n';
+
+    std::cout << "Character Distribution:\n";
+    //gathering data
+    if (!typeMsg.empty()){
+    std::map<std::string, int> dist;
+        for (int i = 0; i < typeMsg.size(); i++){
+            if (dist.empty()){
+                dist[typeMsg[i].getChar()] = 1;
+            } else if (dist.find(typeMsg[i].getChar()) != dist.end()){
+                //map contains the key, increment its value
+                std::map<std::string, int>::iterator it = dist.find(typeMsg[i].getChar());
+                it->second++;
+            }
+        }
+    } else {
+        std::cout << "There are not characters logged to typeMsg.\n";
+    }
+
+
     return true;
 }
 

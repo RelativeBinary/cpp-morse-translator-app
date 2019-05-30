@@ -39,9 +39,14 @@ bool readLatFile(std::vector<char> &latinMsg, std::string &inFile) {
     if (in) {
         while(getline(in, line)) {
             for (int i = 0; i < line.size(); i++){
-                if (checkLatin(line[i])){
-                    latinMsg.push_back(line[i]);
+                char newLat = line[i]; 
+                if (newLat == ' '){
+                    newLat = '_';
+                }
+                if (checkLatin(newLat)){
+                    latinMsg.push_back(newLat);
                 } else {
+                    std::cerr << "ERROR: readLatFile failed.\n";
                     error = true;
                     break;
                 }
