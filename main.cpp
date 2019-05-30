@@ -17,12 +17,44 @@ int main(int argc, char* argv[]){
 
         //load alphabets and report the results of loading the alphabets
         Alphabet<morseChar> mDict;
-        loadAlphabet(mDict);
+        loadAlphabet(mDict, "Morse");
+
         Alphabet<brailleChar> bDict;
-        loadAlphabet(bDict);
+        loadAlphabet(bDict, "Braille");
+
+        std::vector<char> latinMsg;
+        std::vector<morseChar> morseMsg;
+        std::vector<brailleChar> brailleMsg;
         //using FROM send inMsgFileDie to alphabet of FROM type using std::vector xDict.READFILE(inMsgFileDir); returning the translated result to a vector in main.
         //if its latin then just split the string into a char vector
-
+        if (From == 'L' && To == 'M') {
+            //TODO: add handlers for false returns
+            readLatFile(latinMsg, inFile);
+            //translate(latinMsg, morseMsg);
+            //writeFile(morseMsg, outFile);
+        } else if (From == 'L' && To == 'B') {
+            readLatFile(latinMsg, inFile);
+            //translate(latinMsg, brailleMsg);
+            //writeFile(morseMsg, outFile);
+        } else if (From == 'M' && To == 'L') {
+            readFile(mDict, morseMsg, inFile);
+            //translate(latinMsg, morseMsg);
+            //writeFile(morseMsg, outFile);
+        } else if (From == 'M' && To == 'B') {
+            readFile(mDict, morseMsg, inFile);
+            //translate(latinMsg, morseMsg);
+            //writeFile(morseMsg, outFile);
+        } else if (From == 'B' && To == 'L') {
+            readFile(bDict, brailleMsg, inFile);
+            //translate(latinMsg, morseMsg);
+            //writeFile(morseMsg, outFile);
+        } else if (From == 'B' && To == 'M') {
+            readFile(bDict, brailleMsg, inFile);
+            //translate(latinMsg, morseMsg);
+            //writeFile(morseMsg, outFile);
+        } else {
+            std::cerr << "ERROR: Unknown request to translate from '" << From << "' to '" << To << "'.\n";
+        }
         //then a report method will be used to report the stats on the translated vector
 
         //READING FILE COMPLETE
@@ -30,6 +62,9 @@ int main(int argc, char* argv[]){
         //TRANSLATE FILE
         //using TO send the resulting charvector to the appropriate alphabet and execute the translation command using if(TO == 'L') then outChars = xDict.ToLatin(inMsg)
         //if translating from 'M' to 'B' then have an intermediary step where a temp vector of latin translation is made using if(TO != 'L') then latinChars = xDictoLatin(inMsg) then  is dont again using TO's type by, if(TO == 'X') then latinChars = xDict.translateToTOType(tempLatin)
+
+        //report 
+
     } else {
         std::cerr << "ERROR: Invalid arguments passed ending program.\n";
     }
