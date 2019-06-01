@@ -9,6 +9,7 @@
 bool checkLatin(char &newChar);
 bool readLatFile(std::vector<char> &latinMsg, std::string &inFile);
 bool reportLatMsg(std::vector<char> &latinMsg);
+bool writeLatFile(std::vector<char> &latinMsg);
 
 template <class T>
 class Alphabet {
@@ -61,7 +62,7 @@ class Alphabet {
         }
         T getByLatin(char &target){
             for (int i = 0; i < characters.size(); i++){
-                if (target == characters[i].getLatin()){
+                if (target == characters[i].getLatChar()){
                     return characters[i];
                 }
             }
@@ -74,17 +75,30 @@ class Alphabet {
             //loop through inMsg
             for(int i = 0; i < inMsg.size(); i++){
                 //NOTE: all spaces are currently in _ format when read from latin file into inMsg
+                //check if inMsg latin is in alphabet
                 if (doesLatExist(inMsg[i])){
                     outMsg.push_back(getByLatin(inMsg[i]));
                 } else {
-                    throw "ERROR: translateFromLatin encountered unknown character '" << inMsg[i] << '\n';
-                    return false;
+                    throw "ERROR: translateToLatin encountered an unknown character\n";
                 }
             }
             return true;
         }
         bool translateToLatin(std::vector<T> &inMsg, std::vector<char> &outMsg){
-
+            //loop through inMsg
+            for (int i = 0; i < inMsg.size(); i++){
+                //NOTE: all _ need to be converted to ' ' before being pushed to outMsg
+                //check if inMsg char is in alphabet
+                if (doesLatExist(inMsg[i])){
+                    if (inMsg[i].getLatChar() == '_'){
+                        outMsg.push_back('_');
+                    } else {
+                        outMsg.push_back(inMsg[i].getLatChar());
+                    }
+                } else {
+                    throw "ERROR: translateToLatin encountered an unknown character '" + inMsg[i].getChar() + "'\n";
+                }
+            }
         }
 };
 
@@ -313,6 +327,10 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
     return true;
 }
 
+template <class T>
+bool writeFile(std::vector<T> &outMsg, std::string &outFile){
+
+}
 
 #endif
     //NOTES: overloading will be for types of customChar and normal char

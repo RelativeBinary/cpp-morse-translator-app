@@ -34,10 +34,18 @@ int main(int argc, char* argv[]){
         bool processError = false;
         std::string whyError = "";
         if (From == 'L' && To == 'M') {
-            //TODO: add handlers for false returns
             if(readLatFile(latinMsg, inFile)){
-                //translate(latinMsg, morseMsg);
-                //writeFile(morseMsg, outFile);
+                reportLatMsg(latinMsg);
+                if (mDict.translateFromLatin(latinMsg, morseMsg)){
+                    reportMsg(morseMsg, mDict);
+                    if(!writeFile(morseMsg, outFile)){
+                        whyError = "writeFile failed.\n";
+                        processError = true;
+                    }
+                } else{
+                    whyError = "translation failed.\n";
+                    processError = true;
+                }
             } else {
                 whyError = "readLatFile failed.\n";
                 processError = true;
@@ -70,25 +78,13 @@ int main(int argc, char* argv[]){
             std::cerr << "ERROR: " << whyError << '\n';
             //program 'ends' here
         }else {
-            //TESTING
-            reportLatMsg(latinMsg);
-            reportMsg(morseMsg, mDict);
-            reportMsg(brailleMsg, bDict);
-            //then a report method will be used to report the stats on the translated vector
-
-            //READING FILE COMPLETE
-
-            //TRANSLATE FILE
-            //using TO send the resulting charvector to the appropriate alphabet and execute the translation command using if(TO == 'L') then outChars = xDict.ToLatin(inMsg)
-            //if translating from 'M' to 'B' then have an intermediary step where a temp vector of latin translation is made using if(TO != 'L') then latinChars = xDictoLatin(inMsg) then  is dont again using TO's type by, if(TO == 'X') then latinChars = xDict.translateToTOType(tempLatin)
-
-            //report
+            std::cout << "PROGRAM TERMINATED\n";
         } 
 
     } else {
         std::cerr << "ERROR: Invalid arguments passed ending program.\n";
     }
-
+    return 0;
 }
 
 //USED TO CHECK INPUT
