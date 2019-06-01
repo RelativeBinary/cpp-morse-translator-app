@@ -8,6 +8,7 @@
 
 bool checkLatin(char &newChar);
 bool readLatFile(std::vector<char> &latinMsg, std::string &inFile);
+bool reportLatMsg(std::vector<char> &latinMsg);
 
 template <class T>
 class Alphabet {
@@ -56,9 +57,34 @@ class Alphabet {
                     return characters[i];
                 }
             }
+            throw "ERROR : getByTypeStr attempted get a character that does not exist.\n";
+        }
+        T getByLatin(char &target){
+            for (int i = 0; i < characters.size(); i++){
+                if (target == characters[i].getLatin()){
+                    return characters[i];
+                }
+            }
+            throw "ERROR : getByLatin attemped to get a character that does not exist.\n";
         }
         bool addNewChar(T& newChar){
             characters.push_back(newChar);
+        }
+        bool translateFromLatin(std::vector<char> &inMsg, std::vector<T> &outMsg){
+            //loop through inMsg
+            for(int i = 0; i < inMsg.size(); i++){
+                //NOTE: all spaces are currently in _ format when read from latin file into inMsg
+                if (doesLatExist(inMsg[i])){
+                    outMsg.push_back(getByLatin(inMsg[i]));
+                } else {
+                    throw "ERROR: translateFromLatin encountered unknown character '" << inMsg[i] << '\n';
+                    return false;
+                }
+            }
+            return true;
+        }
+        bool translateToLatin(std::vector<T> &inMsg, std::vector<char> &outMsg){
+
         }
 };
 
@@ -235,7 +261,7 @@ bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {
     if (in) {
         while(getline(in, line)){
             if(T::readLine(dict, typeMsg, line)){
-                //successfull read
+                //successfull read typeMsg should now have characters
             } else {
                 std::cerr << "ERROR: an error occured when trying to read input message.\n";
             }
@@ -256,18 +282,27 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
     //report on length of message.
     std::cout << "\t\t:REPORT:\n\n";
     std::cout << "Message Size:\t" << typeMsg.size() << '\n';
-
-    std::cout << "Character Distribution:\n";
     //gathering data
     if (!typeMsg.empty()){
-    std::map<std::string, int> dist;
+        std::cout << "Message:\t";
+        for (int i = 0; i < typeMsg.size(); i++){
+            std::cout << typeMsg[i].getChar() << " ";
+        }
+        std::cout << '\n';
+        
+        std::cout << "Character Distribution:\n";
+        std::map<std::string, int> dist;
+        std::map<std::string, int>::iterator it;
         for (int i = 0; i < typeMsg.size(); i++){
             if (dist.empty()){
                 dist[typeMsg[i].getChar()] = 1;
             } else if (dist.find(typeMsg[i].getChar()) != dist.end()){
                 //map contains the key, increment its value
-                std::map<std::string, int>::iterator it = dist.find(typeMsg[i].getChar());
+                it = dist.find(typeMsg[i].getChar());
                 it->second++;
+            } else if (dist.find(typeMsg[i].getChar()) == dist.end()){
+                //map doesnt contain key, add to map
+                dist[typeMsg[i].getChar()] = 1;
             }
         }
     } else {
@@ -278,9 +313,10 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
     return true;
 }
 
+
 #endif
-//NOTES: overloading will be for types of customChar and normal char
-//morse characters are sperated by spaces, but the whitespace character is represented by an underscore
-//in morse space is not underscore anymore but just the whitespace character
-//newlines and eof
-//newlines: when reading a file ur generally using a getline while loop, so at the end of the while loop you can add a newline character IF were not at last line of the file
+    //NOTES: overloading will be for types of customChar and normal char
+    //morse characters are sperated by spaces, but the whitespace character is represented by an underscore
+    //in morse space is not underscore anymore but just the whitespace character
+    //newlines and eof
+    //newlines: when reading a file ur generally using a getline while loop, so at the end of the while loop you can add a newline character IF were not at last line of the file

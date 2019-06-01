@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <map>
 
 bool checkLatin(char &newChar) {
     char validLatin[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_'};
@@ -62,4 +63,44 @@ bool readLatFile(std::vector<char> &latinMsg, std::string &inFile) {
     }
 
     return true;
+}
+
+bool reportLatMsg(std::vector<char> &latinMsg){
+    //report on length of message
+    std::cout << "\t\t:REPORT:\n\n";
+    std::cout << "Message Size:\t" << latinMsg.size() << '\n';
+    //gathering data
+    if(!latinMsg.empty()){
+        std::cout << "Message:\t";
+        for (auto const& item : latinMsg){
+            if (item == '_'){
+                std::cout << ' ';
+            } else {
+                std::cout << item;
+            }
+        }
+        std::cout << '\n';
+
+        std::cout << "Character Distribution:\n";
+        std::map<char, int> dist;
+        std::map<char, int>::iterator it;
+        for(int i = 0; i < latinMsg.size(); i++){
+            if(dist.empty()){
+                dist[latinMsg[i]] = 1;
+            } else if (dist.find(latinMsg[i]) != dist.end()){
+                //map contains key, increment its value
+                it = dist.find(latinMsg[i]);
+                it->second++;
+            } else if (dist.find(latinMsg[i]) == dist.end()){
+                //map doesnt contain key, add to map
+                dist[latinMsg[i]] = 1;
+            }
+        }
+        std::cout << "Character:\tCount\n";
+        for (auto const& item : dist){
+            std::cout << item.first << " \t:\t" << item.second << '\n';
+        }
+    } else {
+        std::cout << "There are no characters logged to latinMsg.\n";
+    }
 }

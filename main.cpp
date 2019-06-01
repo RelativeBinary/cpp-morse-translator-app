@@ -23,8 +23,8 @@ int main(int argc, char* argv[]){
         loadAlphabet(bDict, "Braille");
 
         //testing
-        mDict.displayAlphabet();
-        bDict.displayAlphabet();
+        //mDict.displayAlphabet();
+        //bDict.displayAlphabet();
 
         std::vector<char> latinMsg;
         std::vector<morseChar> morseMsg;
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]){
             //program 'ends' here
         }else {
             //TESTING
-            //reportLatMsg(latinMsg);
+            reportLatMsg(latinMsg);
             reportMsg(morseMsg, mDict);
             reportMsg(brailleMsg, bDict);
             //then a report method will be used to report the stats on the translated vector
