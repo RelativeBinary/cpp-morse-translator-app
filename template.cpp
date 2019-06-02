@@ -102,5 +102,23 @@ bool reportLatMsg(std::vector<char> &latinMsg){
         }
     } else {
         std::cout << "There are no characters logged to latinMsg.\n";
+        return false;
     }
+    return true;
+}
+
+bool writeLatFile(std::vector<char> &latinMsg, std::string &outFile){
+    std::ofstream oFile(outFile);
+    if(oFile.is_open()){
+        for (int i = 0; i < latinMsg.size(); i++){
+            if(latinMsg[i] == '_'){
+                oFile << ' ';
+            } else {
+                oFile << latinMsg[i];
+            }
+        } 
+    } else {
+        return false;
+    }
+    return true;
 }

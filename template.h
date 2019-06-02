@@ -9,7 +9,7 @@
 bool checkLatin(char &newChar);
 bool readLatFile(std::vector<char> &latinMsg, std::string &inFile);
 bool reportLatMsg(std::vector<char> &latinMsg);
-bool writeLatFile(std::vector<char> &latinMsg);
+bool writeLatFile(std::vector<char> &latinMsg, std::string &outFile);
 
 template <class T>
 class Alphabet {
@@ -32,7 +32,6 @@ class Alphabet {
             }
             for (int i = 0; i < characters.size(); i++){
                 if (target.getLatChar() == characters[i].getLatChar() && target.getChar() == characters[i].getChar() ){
-                    std::cout << "Char: '" << target.getChar() << "' already exists.\n";
                     return true;
                 }
             }
@@ -50,6 +49,15 @@ class Alphabet {
             return false;
         }
         bool doesLatExist(char &target){
+            if(isEmpty()){
+                return false;
+            }
+            for (int i = 0; i < characters.size(); i++){
+                if(target == characters[i].getLatChar()){
+                    return true;
+                }
+            }
+            return false;
 
         }
         T getByTypeStr(std::string &target){
@@ -89,16 +97,19 @@ class Alphabet {
             for (int i = 0; i < inMsg.size(); i++){
                 //NOTE: all _ need to be converted to ' ' before being pushed to outMsg
                 //check if inMsg char is in alphabet
-                if (doesLatExist(inMsg[i])){
+                if (doesExist(inMsg[i])){
                     if (inMsg[i].getLatChar() == '_'){
                         outMsg.push_back('_');
                     } else {
                         outMsg.push_back(inMsg[i].getLatChar());
                     }
+
                 } else {
                     throw "ERROR: translateToLatin encountered an unknown character '" + inMsg[i].getChar() + "'\n";
+                    return false;
                 }
             }
+            return true;
         }
 };
 
@@ -136,7 +147,8 @@ class morseChar {
                 if (line[i] != ' '){//add to newChar if not a delimiter
                     newCharStr += line[i];
                 }
-                if (line[i] == ' ' && !newCharStr.empty()){
+                //check if delimeter was reached or if this is the last character
+                if ((line[i] == ' ' || i+1 >= line.size()) && !newCharStr.empty()){
                     //check the newChar is in dict and if valid push to typeMsg
                     if (dict.doesStrExist(newCharStr)){
                         //push the matching char to the msg vector
@@ -151,6 +163,9 @@ class morseChar {
                 }
             }
             return true;
+        }
+        std::string outputChar() {//adds spaces to the end 
+            return getChar() + " ";
         }
 };
 
@@ -194,12 +209,8 @@ class brailleChar {
             }
 
             for (int i = 0; i < line.size(); i++){
-                if (i % 6 != 0){
-                    //add to newChar if not a delimiter
-                    newCharStr += line[i];
-                } 
-                
-                if (i % 6 == 0 && !newCharStr.empty()) {//
+                newCharStr += line[i];
+                if (newCharStr.size() >= 6){
                     //check the newChar is in dict and if valid push to typeMsg
                     if (dict.doesStrExist(newCharStr)){
                         //push the matching char to the msg vector
@@ -213,6 +224,9 @@ class brailleChar {
 
             }
             return true;
+        }
+        std::string outputChar() {
+            return getChar();
         }
 };
 
@@ -278,6 +292,7 @@ bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {
                 //successfull read typeMsg should now have characters
             } else {
                 std::cerr << "ERROR: an error occured when trying to read input message.\n";
+                return false;
             }
         }
     } else {
@@ -319,17 +334,32 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
                 dist[typeMsg[i].getChar()] = 1;
             }
         }
+        std::cout << "Character:\tCount\n";
+        for(auto const& item : dist){
+            std::string temp = item.first;
+            T tempItem = dict.getByTypeStr(temp);
+            std::cout << item.first << ':' << tempItem.getLatChar() << " \t:\t" << item.second << '\n';
+        }
     } else {
         std::cout << "There are not characters logged to typeMsg.\n";
     }
 
-
+    std::cout<< "END OF REPORT.\n";
     return true;
 }
 
 template <class T>
 bool writeFile(std::vector<T> &outMsg, std::string &outFile){
-
+    std::ofstream oFile(outFile);
+    if(oFile.is_open()){
+        for (int i = 0; i < outMsg.size(); i++){
+            oFile << outMsg[i].outputChar();
+        }
+        return true;
+    } else {
+        std::cerr << "ERROR: writeFile could not open the out file.\n";
+        return false;
+    }
 }
 
 #endif
