@@ -18,26 +18,26 @@ class Alphabet {
     public:
         Alphabet(){
         }
-        void displayAlphabet(){
+        void displayAlphabet(){//for testing purposes
             for (int i = 0; i < characters.size(); i++){
                 std::cout << characters[i].getLatChar() << " : " << characters[i].getChar() << '\n';
             }
         }
-        bool isEmpty() {
+        bool isEmpty() {//checks if there characters vector has any characters in it
             return characters.empty();
         }
-        bool doesExist(T &target){
+        bool doesExist(T &target){//checks if a new characters latin or typeChar already exists in the alphabet 
             if (isEmpty()){
-                return false;                                           //newChar doesnt exist as the characters vector is empty
+                return false;//newChar doesnt exist as the characters vector is empty
             }
             for (int i = 0; i < characters.size(); i++){
-                if (target.getLatChar() == characters[i].getLatChar() && target.getChar() == characters[i].getChar() ){
+                if (target.getLatChar() == characters[i].getLatChar() || target.getChar() == characters[i].getChar() ){
                     return true;
                 }
             }
             return false;
         }
-        bool doesStrExist(std::string &target){
+        bool doesStrExist(std::string &target){//checks if a character exists by checking the typeStrings
             if(isEmpty()){
                 return false;
             }
@@ -48,7 +48,7 @@ class Alphabet {
             }
             return false;
         }
-        bool doesLatExist(char &target){
+        bool doesLatExist(char &target){//checks if a latin characters exists by checking the lati characters
             if(isEmpty()){
                 return false;
             }
@@ -60,7 +60,7 @@ class Alphabet {
             return false;
 
         }
-        T getByTypeStr(std::string &target){
+        T getByTypeStr(std::string &target){//returns a character based on a typeString
             for (int i = 0; i < characters.size(); i++){
                 if (target == characters[i].getChar()){
                     return characters[i];
@@ -69,17 +69,17 @@ class Alphabet {
             throw "ERROR : getByTypeStr attempted get a character that does not exist.\n";
         }
         T getByLatin(char &target){
-            for (int i = 0; i < characters.size(); i++){
+            for (int i = 0; i < characters.size(); i++){//returns a character based on a latin character
                 if (target == characters[i].getLatChar()){
                     return characters[i];
                 }
             }
             throw "ERROR : getByLatin attemped to get a character that does not exist.\n";
         }
-        bool addNewChar(T& newChar){
+        bool addNewChar(T& newChar){//add new character to characters
             characters.push_back(newChar);
         }
-        bool translateFromLatin(std::vector<char> &inMsg, std::vector<T> &outMsg){
+        bool translateFromLatin(std::vector<char> &inMsg, std::vector<T> &outMsg){//matching latin characters to their typeString to be added to outmsg vector
             //loop through inMsg
             for(int i = 0; i < inMsg.size(); i++){
                 //NOTE: all spaces are currently in _ format when read from latin file into inMsg
@@ -92,13 +92,13 @@ class Alphabet {
             }
             return true;
         }
-        bool translateToLatin(std::vector<T> &inMsg, std::vector<char> &outMsg){
+        bool translateToLatin(std::vector<T> &inMsg, std::vector<char> &outMsg){//matching typeString characters to their latin to be added to outsg vector
             //loop through inMsg
             for (int i = 0; i < inMsg.size(); i++){
                 //NOTE: all _ need to be converted to ' ' before being pushed to outMsg
                 //check if inMsg char is in alphabet
-                if (doesExist(inMsg[i])){
-                    if (inMsg[i].getLatChar() == '_'){
+                if (doesExist(inMsg[i])){//makesure the character exists in the characters vector
+                    if (inMsg[i].getLatChar() == '_'){//if valid send the inMsg character to the outMsg vector
                         outMsg.push_back('_');
                     } else {
                         outMsg.push_back(inMsg[i].getLatChar());
@@ -125,7 +125,7 @@ class morseChar {
         char getLatChar() {
             return lChar;
         }
-        static bool check(std::string &newChar, char &latinChar){
+        static bool check(std::string &newChar, char &latinChar){//check if a new morseChar is valid
             if (!checkLatin(latinChar)){
                 return false;
             } else if (newChar.empty()){
@@ -142,6 +142,7 @@ class morseChar {
             return true;
         }
         static bool readLine(Alphabet<morseChar> &dict, std::vector<morseChar> &typeMsg, std::string &line) {
+            //used in template function readFile to check a morse specific text
             std::string newCharStr = "";
             for (int i = 0; i < line.size(); i++){
                 if (line[i] != ' '){//add to newChar if not a delimiter
@@ -159,13 +160,32 @@ class morseChar {
                     }
                     newCharStr = "";
                 } else {
-                    //consecutive spaces in the file
+                    //ignor consecutive spaces in the file
                 }
             }
             return true;
         }
-        std::string outputChar() {//adds spaces to the end 
+        std::string outputChar() {//adds spaces to the end
             return getChar() + " ";
+        }
+        static bool getSymbolCount(std::vector<morseChar> &typeMsg){//gets dot and dash count for reporting on morse messages
+            int dashes=0;
+            int dots=0;
+            for (int i = 0; i < typeMsg.size(); i++ ){
+                std::string tempStr = typeMsg[i].getChar();
+                for (int j = 0; j < tempStr.size(); j++){
+                    if (tempStr[j] == '-'){
+                        dashes++;
+                    } else if (tempStr[j] == '.'){
+                        dots++;
+                    } else {
+                        std::cerr << "ERROR: getSymbolCount encountered an unknown character: " << tempStr[j] << '\n';
+                    }
+                }
+            }
+            std::cout << "Dashes: " << dashes << '\n';
+            std::cout << "Dots: " << dots << '\n';
+            return true;
         }
 };
 
@@ -181,7 +201,7 @@ class brailleChar {
         char getLatChar(){
             return lChar;
         }
-        static bool check(std::string &newChar, char &latinChar){ 
+        static bool check(std::string &newChar, char &latinChar){ //used to make sure that the new brailleCharacter is valid
             if(!checkLatin(latinChar)){
                 return false;
             } else if (newChar.empty()){
@@ -201,6 +221,7 @@ class brailleChar {
             return true;
         }
         static bool readLine(Alphabet<brailleChar> &dict, std::vector<brailleChar> &typeMsg, std::string &line) {
+            //used in readFile template functions to read braille specific file
             std::string newCharStr = "";
             //check if line is of valid size to fit valid characters.
             if (line.size() % 6 != 0){
@@ -225,41 +246,61 @@ class brailleChar {
             }
             return true;
         }
-        std::string outputChar() {
+        std::string outputChar() {//exists because the writeFile template function uses outputChar for morse so braille needs to do the same 
             return getChar();
+        }
+        static bool getSymbolCount(std::vector<brailleChar> &typeMsg){
+            //used to display symbol counts when reporting on braille messages
+            int zeros=0;
+            int ones=0;
+            for (int i = 0; i < typeMsg.size(); i++ ){
+                std::string tempStr = typeMsg[i].getChar();
+                for (int j = 0; j < tempStr.size(); j++){
+                    if (tempStr[j] == '0'){
+                        zeros++;
+                    } else if (tempStr[j] == '1'){
+                        ones++;
+                    } else {
+                        std::cerr << "ERROR: getSymbolCount encountered an unknown character: " << tempStr[j] << '\n';
+                    }
+                }
+            }
+            std::cout << "Dashes: " << zeros << '\n';
+            std::cout << "Dots: " << ones << '\n';
+            return true;
         }
 };
 
 template <class T>
-bool loadAlphabet(Alphabet<T> &dict, std::string fileName) {
+bool loadAlphabet(Alphabet<T> &dict, std::string fileName) {//used to load the alphabets with their appropriate characters and latin correspondends
     std::ifstream inFile;
     inFile.open(fileName + ".txt");
     std::string line;
     bool error = false;
 
-    if (inFile) {
+    if (inFile) {//check for file access
         while (getline(inFile, line)) {
             char latinChar = line[0];
             std::string newChar = "";
-            if (line[1] != ' ') {
+            if (line[1] != ' ') {//check for space between latin and typeString
                 error = true;
                 std::cerr << "ERROR: poorly formed line in " << fileName << ".txt, expected a space between " << fileName << " character and latin correspondent.\n";
                 std::cerr << "LINE: " << line << '\n';
                 break;
             }
-            for (int i = 2; i < line.size(); i++) {
+            for (int i = 2; i < line.size(); i++) {//grab typeString
                 newChar += line[i];
             }
-            if (!T::check(newChar, latinChar)) {
+            if (!T::check(newChar, latinChar)) {//check for valid data
                 error = true;
                 break;
             }
             T newTChar(newChar, latinChar);
-            if (dict.doesExist(newTChar)) {
+            if (dict.doesExist(newTChar)) {//check if already exists
                 error = true;
-                std::cerr << "ERROR: attempting to add a new " << fileName << " character that is not unique.\n";
+                std::cerr << "ERROR: attempting to add a new " << fileName << " character "<< newChar << ":" << latinChar << " that is not unique.\n";
             } else {
-                dict.addNewChar(newTChar);
+                dict.addNewChar(newTChar);//add to characters vector
             }
         }
     }
@@ -267,9 +308,10 @@ bool loadAlphabet(Alphabet<T> &dict, std::string fileName) {
         std::cerr << "ERROR: Could not open the "<< fileName <<".txt file.\n";
         return false;
     }
-
+    //function execution results
     if (error){
         std::cerr << "ERROR: loadAlphabet failed.\n";
+        dict.displayAlphabet();
         return false;
     }
 
@@ -278,7 +320,7 @@ bool loadAlphabet(Alphabet<T> &dict, std::string fileName) {
 }
 
 template <class T>
-bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {
+bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {//reads morse and braille file types
     //load file
     std::ifstream in;
     in.open(inFile);
@@ -307,7 +349,7 @@ bool readFile(Alphabet<T> &dict, std::vector<T> &typeMsg, std::string &inFile) {
 }
 
 template <class T> 
-bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
+bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){//reports on morse and braille types
     //report on length of message.
     std::cout << "\t\t:REPORT:\n\n";
     std::cout << "Message Size:\t" << typeMsg.size() << '\n';
@@ -318,7 +360,11 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
             std::cout << typeMsg[i].getChar() << " ";
         }
         std::cout << '\n';
-        
+        std::cout << "Symbol Counts:\n";
+        if(!T::getSymbolCount(typeMsg)){
+            std::cerr << "ERROR: getSymbolCount failed.\n";
+            return false;
+        }
         std::cout << "Character Distribution:\n";
         std::map<std::string, int> dist;
         std::map<std::string, int>::iterator it;
@@ -338,7 +384,7 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
         for(auto const& item : dist){
             std::string temp = item.first;
             T tempItem = dict.getByTypeStr(temp);
-            std::cout << item.first << ':' << tempItem.getLatChar() << " \t:\t" << item.second << '\n';
+            std::cout << item.first << " " << tempItem.getLatChar() << " \t:\t" << item.second << '\n';
         }
     } else {
         std::cout << "There are not characters logged to typeMsg.\n";
@@ -349,7 +395,7 @@ bool reportMsg(std::vector<T> &typeMsg, Alphabet<T> &dict){
 }
 
 template <class T>
-bool writeFile(std::vector<T> &outMsg, std::string &outFile){
+bool writeFile(std::vector<T> &outMsg, std::string &outFile){//writes morse and braille type functions to outfile
     std::ofstream oFile(outFile);
     if(oFile.is_open()){
         for (int i = 0; i < outMsg.size(); i++){
@@ -362,9 +408,5 @@ bool writeFile(std::vector<T> &outMsg, std::string &outFile){
     }
 }
 
+
 #endif
-    //NOTES: overloading will be for types of customChar and normal char
-    //morse characters are sperated by spaces, but the whitespace character is represented by an underscore
-    //in morse space is not underscore anymore but just the whitespace character
-    //newlines and eof
-    //newlines: when reading a file ur generally using a getline while loop, so at the end of the while loop you can add a newline character IF were not at last line of the file

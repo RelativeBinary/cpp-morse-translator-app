@@ -1,0 +1,3 @@
+#!/share/bin/bash
+
+echo Hello, World!

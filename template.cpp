@@ -5,9 +5,10 @@
 #include <fstream>
 #include <map>
 
-bool checkLatin(char &newChar) {
+bool checkLatin(char &newChar) { //makes sure latin is valid and in lower case, 
+//when white space is read in readLatFile it will be converted to an '_'
+//when '_' is being sent to an outfile with writeLatFile it will be converted to whitespace
     char validLatin[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_'};
-    //NOTE: when reading latin convert whitespace to '_' and skip doing checkLatin and send it to the inMsg txtfile
     for (int i = 0; i < 27; i++)
     {
         if (newChar == validLatin[i])
@@ -29,7 +30,6 @@ brailleChar::brailleChar(std::string newChar, char latin) {
     lChar = latin;
 }
 
-//LATIN USE ONLY
 bool readLatFile(std::vector<char> &latinMsg, std::string &inFile) {
     //load file
     std::ifstream in;
@@ -39,12 +39,12 @@ bool readLatFile(std::vector<char> &latinMsg, std::string &inFile) {
     //split file into chars as you put them into vector
     if (in) {
         while(getline(in, line)) {
-            for (int i = 0; i < line.size(); i++){
+            for (int i = 0; i < line.size(); i++){//loop through each line of the file
                 char newLat = line[i]; 
-                if (newLat == ' '){
+                if (newLat == ' '){//convert whitespace
                     newLat = '_';
                 }
-                if (checkLatin(newLat)){
+                if (checkLatin(newLat)){ //add to inMsg vector if valid character
                     latinMsg.push_back(newLat);
                 } else {
                     std::cerr << "ERROR: readLatFile failed.\n";
@@ -71,6 +71,7 @@ bool reportLatMsg(std::vector<char> &latinMsg){
     std::cout << "Message Size:\t" << latinMsg.size() << '\n';
     //gathering data
     if(!latinMsg.empty()){
+        //display message
         std::cout << "Message:\t";
         for (auto const& item : latinMsg){
             if (item == '_'){
@@ -80,7 +81,7 @@ bool reportLatMsg(std::vector<char> &latinMsg){
             }
         }
         std::cout << '\n';
-
+        //display character distributions
         std::cout << "Character Distribution:\n";
         std::map<char, int> dist;
         std::map<char, int>::iterator it;
@@ -97,7 +98,7 @@ bool reportLatMsg(std::vector<char> &latinMsg){
             }
         }
         std::cout << "Character:\tCount\n";
-        for (auto const& item : dist){
+        for (auto const& item : dist){//output the distbution results
             std::cout << item.first << " \t:\t" << item.second << '\n';
         }
     } else {
@@ -109,7 +110,7 @@ bool reportLatMsg(std::vector<char> &latinMsg){
 
 bool writeLatFile(std::vector<char> &latinMsg, std::string &outFile){
     std::ofstream oFile(outFile);
-    if(oFile.is_open()){
+    if(oFile.is_open()){//check for access
         for (int i = 0; i < latinMsg.size(); i++){
             if(latinMsg[i] == '_'){
                 oFile << ' ';
@@ -122,3 +123,4 @@ bool writeLatFile(std::vector<char> &latinMsg, std::string &outFile){
     }
     return true;
 }
+
